@@ -5,8 +5,10 @@ import App from "../App";
 import Register from "../pages/Register";
 import Login from "../pages/Login";
 import ProtectedRoute from "./ProtectedRoute";
-import EventsPage from "../pages/EventsPage"; // <-- Import
-import CreateEventPage from "../pages/CreateEventPage"; // <-- Import
+import EventsPage from "../pages/EventsPage";
+import CreateEventPage from "../pages/CreateEventPage";
+import MarketplacePage from "../pages/MarketplacePage";
+import CreateItemPage from "../pages/CreateItemPage";
 
 export const router = createBrowserRouter([
   {
@@ -28,5 +30,13 @@ export const router = createBrowserRouter([
   {
     path: "/events/create",
     element: <ProtectedRoute><CreateEventPage /></ProtectedRoute>,
+  },
+  {
+    path: "/marketplace",
+    element: <ProtectedRoute><MarketplacePage /></ProtectedRoute>,
+  },
+  {
+    path: "/marketplace/create",
+    element: <ProtectedRoute><CreateItemPage /></ProtectedRoute>,
   },
 ]);

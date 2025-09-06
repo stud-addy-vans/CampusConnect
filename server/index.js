@@ -8,6 +8,7 @@ import cors from 'cors';
 // Import route files
 import authRoutes from './routes/auth.js';
 import eventRoutes from './routes/events.js';
+import marketplaceRoutes from './routes/marketplace.js';
 
 dotenv.config();
 const app = express();
@@ -17,6 +18,8 @@ app.use(express.json());
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/events', eventRoutes);
+
+app.use('/api/marketplace', marketplaceRoutes);
 
 const PORT = process.env.PORT || 5000;
 
