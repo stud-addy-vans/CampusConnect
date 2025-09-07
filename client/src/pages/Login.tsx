@@ -1,19 +1,16 @@
 // client/src/pages/Login.tsx
 
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
-import { loginUser } from '../api/auth';
-import { useAuth } from '../context/AuthContext'; // Import useAuth
 
 const Login = () => {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-  });
-  const auth = useAuth(); // Get the auth context
-  const navigate = useNavigate(); // Get the navigate function
+  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -21,57 +18,36 @@ const Login = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
     try {
-      const data = await loginUser(formData);
-      console.log('Login successful:', data);
-      auth.login(data.token, data.user); // Save token and user info
-      navigate('/'); // Redirect to homepage
-    } catch (error) {
-      console.error('Login failed:', error);
-      // TODO: Show an error message
+      await login(formData);
+      navigate('/');
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Login failed.');
     }
   };
 
-
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
-        <h1 className="text-2xl font-bold text-center">Login to Your Account</h1>
-        <form onSubmit={handleSubmit} className="space-y-6">
+    <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
+      <div className="bg-gray-800 p-8 rounded-lg shadow-lg max-w-md w-full text-white">
+        <h1 className="text-3xl font-bold text-center mb-6">Login to CampusConnect</h1>
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-              Email
-            </label>
-            <Input
-              id="email"
-              name="email"
-              type="email"
-              required
-              value={formData.email}
-              onChange={handleChange}
-            />
+            <label htmlFor="email">Email</label>
+            <Input id="email" name="email" type="email" value={formData.email} onChange={handleChange} required />
           </div>
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-              Password
-            </label>
-            <Input
-              id="password"
-              name="password"
-              type="password"
-              required
-              value={formData.password}
-              onChange={handleChange}
-            />
+            <label htmlFor="password">Password</label>
+            <Input id="password" name="password" type="password" value={formData.password} onChange={handleChange} required />
           </div>
-          <Button type="submit">Login</Button>
+          {error && <p className="text-red-500 text-sm">{error}</p>}
+          <Button type="submit" className="w-full bg-cyan-500 hover:bg-cyan-600">Login</Button>
         </form>
-        <p className="text-sm text-center text-gray-600">
-          Don't have an account?{' '}
-          <Link to="/register" className="font-medium text-indigo-600 hover:text-indigo-500">
-            Register
-          </Link>
-        </p>
+        <div className="text-center mt-6">
+          <p className="text-gray-400">Don't have an account?{' '}
+            <Link to="/register" className="text-cyan-400 hover:underline">Register</Link>
+          </p>
+        </div>
       </div>
     </div>
   );

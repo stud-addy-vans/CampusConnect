@@ -1,66 +1,101 @@
 // client/src/context/AuthContext.tsx
 
-import { createContext, useState, useEffect, useContext, type ReactNode } from 'react';
-
-// Define the shape of the user and auth context
-interface User {
-  id: string;
-  username: string;
-  email: string;
-}
+import {
+  createContext,
+  useState,
+  useEffect,
+  useContext,
+  type ReactNode,
+} from "react";
+import { io, type Socket } from "socket.io-client"; // Import socket.io-client
+import { loginUser, registerUser } from "../api/auth";
+import { type AuthData, type AuthResponse } from "../api/auth";
 
 interface AuthContextType {
   token: string | null;
-  user: User | null;
+  user: AuthResponse["user"] | null;
   isAuthenticated: boolean;
-  login: (token: string, user: User) => void;
+  socket: Socket | null; // Add socket to the context type
+  login: (userData: AuthData) => Promise<void>;
+  register: (userData: AuthData) => Promise<void>;
   logout: () => void;
 }
 
-// Create the context with a default value
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Create the provider component
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
-  const [user, setUser] = useState<User | null>(JSON.parse(localStorage.getItem('user') || 'null'));
+  const [token, setToken] = useState<string | null>(
+    localStorage.getItem("token")
+  );
+  const [user, setUser] = useState<AuthResponse["user"] | null>(
+    JSON.parse(localStorage.getItem("user") || "null")
+  );
+  const [socket, setSocket] = useState<Socket | null>(null);
 
-  // This effect runs when the component mounts to sync state with localStorage
+  // This effect handles the socket connection lifecycle
   useEffect(() => {
-    const storedToken = localStorage.getItem('token');
-    const storedUser = localStorage.getItem('user');
-    if (storedToken && storedUser) {
-      setToken(storedToken);
-      setUser(JSON.parse(storedUser));
-    }
-  }, []);
+    // If there's a token and a user, create and connect the socket
+    if (token && user) {
+      const newSocket = io("http://localhost:5000", {
+        auth: {
+          token: token,
+        },
+      });
+      setSocket(newSocket);
 
-  const login = (newToken: string, newUser: User) => {
-    setToken(newToken);
-    setUser(newUser);
-    localStorage.setItem('token', newToken);
-    localStorage.setItem('user', JSON.stringify(newUser));
+      // Cleanup function: disconnect the socket when the user logs out or the app closes
+      return () => {
+        newSocket.disconnect();
+      };
+    } else {
+      // If no token, ensure any existing socket is disconnected
+      if (socket) {
+        socket.disconnect();
+        setSocket(null);
+      }
+    }
+  }, [token, user]);
+
+  const login = async (userData: AuthData) => {
+    const data = await loginUser(userData);
+    setToken(data.token);
+    setUser(data.user);
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("user", JSON.stringify(data.user));
+  };
+
+  const register = async (userData: AuthData) => {
+    await registerUser(userData);
   };
 
   const logout = () => {
     setToken(null);
     setUser(null);
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
   };
 
   return (
-    <AuthContext.Provider value={{ token, user, isAuthenticated: !!token, login, logout }}>
+    <AuthContext.Provider
+      value={{
+        token,
+        user,
+        isAuthenticated: !!token,
+        login,
+        register,
+        logout,
+        socket,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
 };
 
-// Create a custom hook for easy access to the context
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };

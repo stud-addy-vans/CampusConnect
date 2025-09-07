@@ -9,11 +9,51 @@ import EventsPage from "../pages/EventsPage";
 import CreateEventPage from "../pages/CreateEventPage";
 import MarketplacePage from "../pages/MarketplacePage";
 import CreateItemPage from "../pages/CreateItemPage";
+import MainLayout from "../components/layout/MainLayout";
+import RideSharePage from "../pages/RideSharePage";
+import CreateRidePage from "../pages/CreateRidePage";
+import ForumPage from '../pages/ForumPage';
+import CreatePostPage from '../pages/CreatePostPage';
+import PostDetailPage from '../pages/PostDetailPage';
+import ChatPage from '../pages/ChatPage';
+import AboutPage from '../pages/AboutPage';
+import GalleryPage from '../pages/GalleryPage';
+import ContactPage from '../pages/ContactPage';
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <ProtectedRoute><App /></ProtectedRoute>,
+    element: (
+      <ProtectedRoute>
+        <MainLayout />
+      </ProtectedRoute>
+    ),
+    // Child routes will be rendered inside the MainLayout's <Outlet />
+    children: [
+      { index: true, element: <App /> }, // The homepage
+      { path: "events", element: <EventsPage /> },
+      { path: "events/create", element: <CreateEventPage /> },
+      { path: "marketplace", element: <MarketplacePage /> },
+      { path: "marketplace/create", element: <CreateItemPage /> },
+      { path: "rides", element: <RideSharePage /> },
+      { path: "rides/create", element: <CreateRidePage /> },
+      { path: "forum", element: <ForumPage /> },
+      { path: "forum/create", element: <CreatePostPage /> },
+      { path: "forum/:id", element: <PostDetailPage /> },
+      { path: "chat", element: <ChatPage /> },
+    ],
+  },
+  {
+    path: '/about',
+    element: <AboutPage />,
+  },
+  {
+    path: '/gallery',
+    element: <GalleryPage />,
+  },
+  {
+    path: '/contact',
+    element: <ContactPage />,
   },
   {
     path: "/register",
@@ -22,21 +62,5 @@ export const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login />,
-  },
-  {
-    path: "/events",
-    element: <ProtectedRoute><EventsPage /></ProtectedRoute>,
-  },
-  {
-    path: "/events/create",
-    element: <ProtectedRoute><CreateEventPage /></ProtectedRoute>,
-  },
-  {
-    path: "/marketplace",
-    element: <ProtectedRoute><MarketplacePage /></ProtectedRoute>,
-  },
-  {
-    path: "/marketplace/create",
-    element: <ProtectedRoute><CreateItemPage /></ProtectedRoute>,
   },
 ]);

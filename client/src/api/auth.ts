@@ -1,23 +1,28 @@
 // client/src/api/auth.ts
 
-import api from './axios'; // Import our new api instance
+import api from './axios';
 
-// Define the shape of the data for registration and login
-interface AuthData {
+export interface AuthData {
   username?: string;
   email?: string;
   password?: string;
 }
 
-// Register function now uses the 'api' instance
-export const registerUser = async (userData: AuthData) => {
-  // We no longer need the full URL, just the endpoint
+export interface AuthResponse {
+  token: string;
+  user: {
+    id: string;
+    username: string;
+    email: string;
+  }
+}
+
+export const registerUser = async (userData: AuthData): Promise<AuthResponse> => {
   const response = await api.post('/auth/register', userData);
   return response.data;
 };
 
-// Login function now uses the 'api' instance
-export const loginUser = async (userData: AuthData) => {
+export const loginUser = async (userData: AuthData): Promise<AuthResponse> => {
   const response = await api.post('/auth/login', userData);
   return response.data;
 };

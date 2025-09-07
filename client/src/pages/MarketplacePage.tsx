@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast'; // <-- Import toast
 import Button from '../components/ui/Button';
+import Spinner from '../components/ui/Spinner'; // <-- Import Spinner
 import { getItems, type MarketplaceItem } from '../api/marketplace';
 
 const MarketplacePage = () => {
@@ -15,6 +17,7 @@ const MarketplacePage = () => {
         const data = await getItems();
         setItems(data);
       } catch (err) {
+        toast.error('Failed to fetch marketplace items.'); // <-- Show toast on error
         console.error(err);
       } finally {
         setLoading(false);
@@ -23,7 +26,7 @@ const MarketplacePage = () => {
     fetchItems();
   }, []);
 
-  if (loading) return <p className="text-white text-center">Loading items...</p>;
+  if (loading) return <Spinner />; // <-- Use Spinner while loading
 
   return (
     <div className="min-h-screen bg-gray-900 text-white p-4">
