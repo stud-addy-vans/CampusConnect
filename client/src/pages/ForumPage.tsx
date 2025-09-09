@@ -31,14 +31,14 @@ const ForumPage = () => {
     <div className="container mx-auto p-4">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-white">Student Forum</h1>
-        <Link to="/forum/create">
+        <Link to="../forum/create">
           <Button className="bg-cyan-500 hover:bg-cyan-600">Create Post</Button>
         </Link>
       </div>
 
       <div className="space-y-4">
         {posts.map((post) => (
-          <Link to={`/forum/${post._id}`} key={post._id} className="block bg-gray-800 p-6 rounded-lg shadow-lg border border-gray-700 hover:border-cyan-500 transition-colors duration-300">
+          <Link to={`../forum/${post._id}`} key={post._id} className="block bg-gray-800 p-6 rounded-lg shadow-lg border border-gray-700 hover:border-cyan-500 transition-colors duration-300">
             <div className="flex justify-between items-start">
               <div>
                 <h2 className="text-xl font-bold text-cyan-400">{post.title}</h2>

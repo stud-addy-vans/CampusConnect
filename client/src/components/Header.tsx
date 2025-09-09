@@ -10,12 +10,12 @@ const Header = () => {
   return (
     <header className="bg-gray-800 text-white shadow-md">
       <div className="container mx-auto flex justify-between items-center p-4">
-        <Link to="/" className="text-2xl font-bold text-cyan-400">
+        <Link to="/dashboard" className="text-2xl font-bold text-cyan-400">
           CampusConnect
         </Link>
         <nav className="flex items-center space-x-6">
           <NavLink
-            to="/events"
+            to="./events"
             className={({ isActive }) =>
               isActive ? "text-cyan-400" : "hover:text-cyan-400"
             }
@@ -23,7 +23,7 @@ const Header = () => {
             Events
           </NavLink>
           <NavLink
-            to="/marketplace"
+            to="./marketplace"
             className={({ isActive }) =>
               isActive ? "text-cyan-400" : "hover:text-cyan-400"
             }
@@ -31,7 +31,7 @@ const Header = () => {
             Marketplace
           </NavLink>
           <NavLink
-            to="/rides"
+            to="./rides"
             className={({ isActive }) =>
               isActive ? "text-cyan-400" : "hover:text-cyan-400"
             }
@@ -39,7 +39,7 @@ const Header = () => {
             Ride Share
           </NavLink>
           <NavLink
-            to="/forum"
+            to="./forum"
             className={({ isActive }) =>
               isActive ? "text-cyan-400" : "hover:text-cyan-400"
             }
@@ -47,7 +47,7 @@ const Header = () => {
             Forum
           </NavLink>
           <NavLink
-            to="/chat"
+            to="./chat"
             className={({ isActive }) =>
               isActive ? "text-cyan-400" : "hover:text-cyan-400"
             }
@@ -59,6 +59,7 @@ const Header = () => {
           <span className="font-semibold">Welcome, {user?.username}</span>
           <Button
             onClick={logout}
+            
             className="bg-red-600 hover:bg-red-700 text-sm py-1 px-3"
           >
             Logout

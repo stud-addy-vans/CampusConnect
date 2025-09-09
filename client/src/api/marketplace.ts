@@ -8,6 +8,7 @@ export interface MarketplaceItem {
   description: string;
   price: number;
   category: string;
+  imageUrl: string;
   seller: {
     _id: string;
     username: string;
@@ -20,6 +21,7 @@ interface ItemData {
   description: string;
   price: number;
   category: string;
+  imageUrl: string;
 }
 
 export const createItem = async (itemData: ItemData) => {
@@ -29,5 +31,17 @@ export const createItem = async (itemData: ItemData) => {
 
 export const getItems = async (): Promise<MarketplaceItem[]> => {
   const response = await api.get('/marketplace');
+  return response.data;
+};
+
+export const uploadImage = async (imageFile: File) => {
+  const formData = new FormData();
+  formData.append('image', imageFile);
+
+  const response = await api.post('/upload', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
   return response.data;
 };

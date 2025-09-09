@@ -14,8 +14,19 @@ export interface AuthResponse {
     id: string;
     username: string;
     email: string;
-  }
+    role: 'student' | 'club_head' | 'admin'; // Role is now included
+  };
 }
+
+export const registerAdmin = async (userData: AuthData) => {
+  const response = await api.post('/auth/register/admin', userData);
+  return response.data;
+};
+
+export const registerStudent = async (userData: AuthData) => {
+    const response = await api.post('/auth/register/student', userData);
+    return response.data;
+};
 
 export const registerUser = async (userData: AuthData): Promise<AuthResponse> => {
   const response = await api.post('/auth/register', userData);

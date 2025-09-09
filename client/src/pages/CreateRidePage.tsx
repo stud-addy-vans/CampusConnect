@@ -23,7 +23,7 @@ const CreateRidePage = () => {
     e.preventDefault();
     try {
       await createRide({ ...formData, seatsAvailable: Number(formData.seatsAvailable) });
-      navigate('/rides');
+      navigate('../rides');
     } catch (error) {
       console.error('Failed to create ride:', error);
     }

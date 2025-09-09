@@ -21,6 +21,10 @@ const marketplaceItemSchema = new mongoose.Schema({
         required: true,
         enum: ['Books', 'Electronics', 'Furniture', 'Other'],
     },
+    imageUrl: {
+        type: String,
+        required: true,
+    },
     seller: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,

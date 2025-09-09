@@ -23,6 +23,11 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    role: {
+        type: String,
+        enum: ['student', 'club_head', 'admin'],
+        default: 'student',
+    },
 }, { timestamps: true }); // Automatically adds createdAt and updatedAt fields
 
 // Hash password before saving the user

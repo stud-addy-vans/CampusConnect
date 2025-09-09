@@ -20,7 +20,7 @@ const CreatePostPage = () => {
     try {
       await createPost(formData);
       toast.success('Post created successfully!');
-      navigate('/forum');
+      navigate('../forum');
     } catch (error) {
       toast.error('Failed to create post.');
     }
